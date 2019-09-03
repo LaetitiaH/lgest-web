@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <script src="node_modules/vue/dist/vue.min.js"></script>
+        <title>Liste des sociétés</title>
+    </head>
+    <body>
+        <h1>La liste des sociétés</h1>
+        <div id="app">
+
+            <p v-if="error">{{ error }}</p>
+            <p v-else-if="societes.length === 0">Aucune société</p>
+            <table v-else>
+                <tr>
+                    <td>ID</td>
+                    <td>Label</td>
+                </tr>
+                <tr v-for="societe in societes">
+                    <td>{{ societe.id }}</td>
+                    <td>{{ societe.label }}</td>
+                </tr>
+            </table>
+
+        </div>
+
+        <script>
+            window.addEventListener("load", () => {
+                const vm = new Vue({
+                    el: "#app",
+                    data: {
+                        societes: [],
+                        error: ""
+                    }
+                });
+
+                //API Call
+                fetch("http://localhost:3000/societes")
+                    //transmet le body de la réponse sur le then suivant
+                    .catch(err => vm.error = "Une erreur inattendue est arrivée 😤")
+                    .then(societesResponse => societesResponse.json())
+                    .then(societes => (vm.societes = societes));
+            });
+        </script>
+    </body>
+</html>
