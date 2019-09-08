@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <script src="node_modules/vue/dist/vue.min.js"></script>
+        <script src="../node_modules/vue/dist/vue.min.js" type="text/javascript"></script>
         <title>Liste des sociétés</title>
     </head>
     <body>
@@ -27,19 +27,19 @@
         </div>
 
         <script>
-            window.addEventListener("load", () => {
-                const vm = new Vue({
-                    el: "#app",
+            window.addEventListener('load', () => {
+                const vm = new Vue({ // eslint-disable-line no-undef
+                    el: '#app',
                     data: {
                         societes: [],
-                        error: ""
+                        error: ''
                     }
                 });
 
-                //API Call
-                fetch("http://localhost:3000/societes")
-                    //transmet le body de la réponse sur le then suivant
-                    .catch(err => vm.error = "Une erreur inattendue est arrivée 😤")
+                // API Call
+                fetch('http://localhost:3000/societes')
+                    // transmet le body de la réponse sur le then suivant
+                    .catch(() => { vm.error = 'Une erreur inattendue est arrivée 😤'; })
                     .then(societesResponse => societesResponse.json())
                     .then(societes => (vm.societes = societes));
             });
