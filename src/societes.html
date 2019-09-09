@@ -2,82 +2,126 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <script src="../node_modules/vue/dist/vue.min.js" type="text/javascript"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-    <link rel="stylesheet" href="../node_modules/bulma/css/bulma.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <script src="../node_modules/vue/dist/vue.min.js" type="text/javascript"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  <link rel="stylesheet" href="../node_modules/bulma/css/bulma.min.css">
 
-    <title>Liste des sociétés</title>
+  <title>Liste des sociétés</title>
 </head>
 
 <body>
-    <h1>La liste des sociétés</h1>
-    <div id="app">
 
-        <p v-if="error">{{ error }}</p>
-        <p v-else-if="societes.length === 0">Aucune société</p>
-        <table v-else>
-            <tr>
-                <td>ID</td>
-                <td>Label</td>
-            </tr>
-            <tr v-for="societe in societes">
-                <td>{{ societe.id }}</td>
-                <td>{{ societe.label }}</td>
-            </tr>
-        </table>
+  <!-- Nav-bar -->
 
-        <!-- Formulaire Ajout société -->
-        <form id="form">
-            <div>
-                <label for="label">Label :</label>
-                <input type="text" id="label" name="label">
-            </div>
-            <button type="submit" color="primary">Ajouter la société</button>
-        </form>
+  <nav class= "navbar is-info" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item">
+        <img src="../images/logo_small.png" width="112" height="28">
+      </a>
 
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+        data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
     </div>
 
-    <script>
-        window.addEventListener('load', () => {
+    <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item">
+          Home
+        </a>
 
-            const vm = new Vue({ // eslint-disable-line no-undef
-                el: '#app',
-                data: {
-                    societes: [],
-                    error: ''
-                }
-            });
+        <a class="navbar-item">
+          Sociétés
+        </a>
+      </div>
+    </div>
 
-            // API Call
-            const loadSocietes = () => {
-                fetch('http://localhost:3000/societes')
-                    // transmet le body de la réponse sur le then suivant
-                    .catch(() => { vm.error = 'Une erreur inattendue est arrivée 😤'; })
-                    .then(societesResponse => societesResponse.json())
-                    .then(societes => (vm.societes = societes));
-            }
-            loadSocietes();
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-light">
+            Log in
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-            // API POST Call
-            document.getElementById('form').addEventListener('submit', (event) => {
-                event.preventDefault();
-                const label = document.getElementById('label').value;
-                fetch('http://localhost:3000/societes', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ label: label }),
-                })
-                    .then(loadSocietes)
-                    .then(document.getElementById("form").reset());
-            });
-        });
-    </script>
+
+<!-- Fin Nav-bar -->
+
+
+
+  <div id="app">
+
+    <p v-if="error">{{ error }}</p>
+    <p v-else-if="societes.length === 0">Aucune société</p>
+    <table v-else>
+      <tr>
+        <td>ID</td>
+        <td>Label</td>
+      </tr>
+      <tr v-for="societe in societes">
+        <td>{{ societe.id }}</td>
+        <td>{{ societe.label }}</td>
+      </tr>
+    </table>
+
+    <!-- Formulaire Ajout société -->
+    <form id="form">
+      <div>
+        <label for="label">Label :</label>
+        <input type="text" id="label" name="label">
+      </div>
+      <button type="submit" color="primary">Ajouter la société</button>
+    </form>
+
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+
+      const vm = new Vue({ // eslint-disable-line no-undef
+        el: '#app',
+        data: {
+          societes: [],
+          error: ''
+        }
+      });
+
+      // API Call
+      const loadSocietes = () => {
+        fetch('http://localhost:3000/societes')
+          // transmet le body de la réponse sur le then suivant
+          .catch(() => { vm.error = 'Une erreur inattendue est arrivée 😤'; })
+          .then(societesResponse => societesResponse.json())
+          .then(societes => (vm.societes = societes));
+      }
+      loadSocietes();
+
+      // API POST Call
+      document.getElementById('form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const label = document.getElementById('label').value;
+        fetch('http://localhost:3000/societes', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ label: label }),
+        })
+          .then(loadSocietes)
+          .then(document.getElementById("form").reset());
+      });
+    });
+  </script>
 </body>
 
 </html>
