@@ -16,7 +16,7 @@
 
   <!-- Nav-bar -->
 
-  <nav class= "navbar is-info" role="navigation" aria-label="main navigation">
+  <nav class="navbar is-info" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item">
         <img src="../images/logo_small.png" width="112" height="28">
@@ -54,35 +54,56 @@
   </nav>
 
 
-<!-- Fin Nav-bar -->
+  <!-- Fin Nav-bar -->
 
+<!-- Liste des sociétés -->
+<div class="columns">
+    <div class="column is-four-fifths">
+  <div class="card">
+    <header class="card-header">
+      <p class="card-header-title is-centered">
+        Liste des sociétés
+      </p>
+    </header>
 
-
-  <div id="app">
-
-    <p v-if="error">{{ error }}</p>
-    <p v-else-if="societes.length === 0">Aucune société</p>
-    <table v-else>
-      <tr>
-        <td>ID</td>
-        <td>Label</td>
-      </tr>
-      <tr v-for="societe in societes">
-        <td>{{ societe.id }}</td>
-        <td>{{ societe.label }}</td>
-      </tr>
-    </table>
-
-    <!-- Formulaire Ajout société -->
-    <form id="form">
-      <div>
-        <label for="label">Label :</label>
-        <input type="text" id="label" name="label">
+    <div id="app">
+      <div class="card-content">
+        <div class="content">
+          <p v-if="error">{{ error }}</p>
+          <p v-else-if="societes.length === 0">Aucune société</p>
+          <table class="table is-hoverable" v-else>
+            <thead>
+              <tr>
+                <td>ID</td>
+                <td>Label</td>
+              </tr>
+            </thead>
+            <tr v-for="societe in societes">
+              <td>{{ societe.id }}</td>
+              <td>{{ societe.label }}</td>
+            </tr>
+          </table>
+        </div>
       </div>
-      <button type="submit" color="primary">Ajouter la société</button>
-    </form>
+    </div>
+  </div>
+</div>
+
+  <!-- Fin liste des sociétés -->
+
+  <!-- Formulaire Ajout société -->
+  <div class="column">
+  <form id="form">
+    <div>
+      <label for="label">Label :</label>
+      <input type="text" id="label" name="label">
+    </div>
+    <button type="submit" color="primary">Ajouter la société</button>
+  </form>
 
   </div>
+</div>
+</div>
 
   <script>
     window.addEventListener('load', () => {
