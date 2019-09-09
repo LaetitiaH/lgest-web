@@ -1,48 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <script src="../node_modules/vue/dist/vue.min.js" type="text/javascript"></script>
-        <title>Liste des sociétés</title>
-    </head>
-    <body>
-        <h1>La liste des sociétés</h1>
-        <div id="app">
 
-            <p v-if="error">{{ error }}</p>
-            <p v-else-if="societes.length === 0">Aucune société</p>
-            <table v-else>
-                <tr>
-                    <td>ID</td>
-                    <td>Label</td>
-                </tr>
-                <tr v-for="societe in societes">
-                    <td>{{ societe.id }}</td>
-                    <td>{{ societe.label }}</td>
-                </tr>
-            </table>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="../node_modules/vue/dist/vue.min.js" type="text/javascript"></script>
+    <title>Liste des sociétés</title>
+</head>
 
-        </div>
+<body>
+    <h1>La liste des sociétés</h1>
+    <div id="app">
 
-        <script>
-            window.addEventListener('load', () => {
-                const vm = new Vue({ // eslint-disable-line no-undef
-                    el: '#app',
-                    data: {
-                        societes: [],
-                        error: ''
-                    }
-                });
+        <p v-if="error">{{ error }}</p>
+        <p v-else-if="societes.length === 0">Aucune société</p>
+        <table v-else>
+            <tr>
+                <td>ID</td>
+                <td>Label</td>
+            </tr>
+            <tr v-for="societe in societes">
+                <td>{{ societe.id }}</td>
+                <td>{{ societe.label }}</td>
+            </tr>
+        </table>
 
-                // API Call
+
+        <!-- Formulaire Ajout société -->
+        <form id="form">
+            <div>
+                <label for="label">Label :</label>
+                <input type="text" id="label" name="label">
+            </div>
+            <button type="submit" color="primary">Ajouter la société</button>
+        </form>
+
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+
+            const vm = new Vue({ // eslint-disable-line no-undef
+                el: '#app',
+                data: {
+                    societes: [],
+                    error: ''
+                }
+            });
+
+            // API Call
+            const loadSocietes = () => {
                 fetch('http://localhost:3000/societes')
                     // transmet le body de la réponse sur le then suivant
                     .catch(() => { vm.error = 'Une erreur inattendue est arrivée 😤'; })
                     .then(societesResponse => societesResponse.json())
                     .then(societes => (vm.societes = societes));
+            }
+            loadSocietes();
+
+            // API POST Call
+            document.getElementById('form').addEventListener('submit', (event) => {
+                event.preventDefault();
+                const label = document.getElementById('label').value;
+                fetch('http://localhost:3000/societes', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ label: label }),
+                })
+                    .then(loadSocietes)
+                    .then(document.getElementById("form").reset());
             });
-        </script>
-    </body>
+        });
+    </script>
+</body>
+
 </html>
