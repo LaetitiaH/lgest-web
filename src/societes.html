@@ -15,156 +15,226 @@
 
 <body>
 
-    <!-- Nav-bar -->
+    <section id="app">
 
-    <nav class="navbar is-info" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item">
-                <img src="../images/logo_small.png" id="logo">
-            </a>
-
-            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
-                data-target="navbarBasicExample">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
-        </div>
-
-        <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start">
+        <!-- Nav-bar -->
+        <nav class="navbar is-info" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
                 <a class="navbar-item">
-                    Home
+                    <img src="../images/logo_small.png" id="logo">
                 </a>
 
-                <a class="navbar-item">
-                    Sociétés
+                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+                    data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
                 </a>
             </div>
-        </div>
 
-        <div class="navbar-end">
-            <div class="navbar-item">
-                <div class="buttons">
-                    <a class="button is-light">
-                        Log in
+            <div id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item">
+                        Home
+                    </a>
+
+                    <a class="navbar-item">
+                        Sociétés
                     </a>
                 </div>
             </div>
-        </div>
-    </nav>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-light">
+                            Log in
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
 
-    <!-- Fin Nav-bar -->
+        <!-- Fin Nav-bar -->
 
-    <!-- Liste des sociétés -->
-    <div class="columns">
-        <div class="column is-four-fifths">
-            <div class="card">
-                <header class="card-header">
-                    <p class="card-header-title is-centered">
-                        Liste des sociétés
-                    </p>
-                </header>
 
-                <div id="app">
-                    <div class="card-content">
-                        <div class="content">
-                            <p v-if="error">{{ error }}</p>
-                            <p v-else-if="societes.length === 0">Aucune société</p>
-                            <table class="table is-hoverable" id="societesTable" v-else>
-                                <thead>
-                                    <tr>
-                                        <td>ID</td>
-                                        <td>Label</td>
-                                        <td></td>
+
+        <!-- Liste des sociétés -->
+        <div class="columns">
+            <div class="column is-four-fifths">
+                <div class="card">
+                    <header class="card-header">
+                        <p class="card-header-title is-centered">
+                            Liste des sociétés
+                        </p>
+                    </header>
+
+                    <div>
+                        <div class="card-content">
+                            <div class="content">
+                                <p v-if="error">{{ error }}</p>
+                                <p v-else-if="societes.length === 0">Aucune société</p>
+                                <table class="table is-hoverable" id="societesTable" v-else>
+                                    <thead>
+                                        <tr>
+                                            <td>ID</td>
+                                            <td>Label</td>
+                                            <td></td>
+                                        </tr>
+                                    </thead>
+                                    <tr v-for="societe in societes">
+                                        <td>{{ societe.id }}</td>
+                                        <td>{{ societe.label }}</td>
+                                        <td><a class="delete" v-on:click="deleteSociete(societe)"></a></td>
+                                        <td><span class="icon has-text-grey-light"
+                                                v-on:click="updateSociete(societe)"><i
+                                                    class="fas fa-pencil-ruler"></i></span></td>
                                     </tr>
-                                </thead>
-                                <tr v-for="societe in societes">
-                                    <td>{{ societe.id }}</td>
-                                    <td>{{ societe.label }}</td>
-                                    <td><a class="delete" v-on:click="deleteSociete(societe)"></a>
-                                    </td>
-                                </tr>
-                            </table>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Fin liste des sociétés -->
+            <!-- Modal updatesociete -->
 
-        <!-- Formulaire Ajout société -->
-        <div class="column">
-            <div class="field">
-                <form id="form">
-                    <div>
-                        <label for="label" class="label">Label</label>
+            <div class="modal" id="modal-update">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <form id="form-update">
+                        <header class="modal-card-head">
+                            <p class="modal-card-title">Modifier la société</p>
+                            <button class="delete" aria-label="close" v-on:click="closeModal"></button>
+                        </header>
 
-                        <div class="control">
-                            <input type="text" id="label" name="label" class="input" placeholder="Text input">
-                        </div>
-                    </div>
+                        <section class="modal-card-body">
+                            <div class="column">
+                                <div class="field">
+                                    <div>
+                                        <label for="label" class="label">Label</label>
+                                        <div class="control">
+                                            <input type="text" id="label" name="label" class="input" placeholder="Label"
+                                                v-model="societeToUpdate.label">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <footer class="modal-card-foot">
+                            <button class="button is-success" type="submit" color="primary"
+                                v-on:click="closeModalSuccess">Mettre à jour</button>
+                            <button class="button" v-on:click="closeModal">Annuler</button>
+                        </footer>
+                    </form>
+                </div>
             </div>
-            <button type="submit" color="primary">Ajouter la société</button>
-            </form>
 
+            <!-- Formulaire Ajout société -->
+            <div class="column">
+                <div class="field">
+                    <form id="form">
+                        <div>
+                            <label for="label" class="label">Label</label>
+
+                            <div class="control">
+                                <input type="text" id="label" name="label" class="input" placeholder="Text input">
+                            </div>
+                        </div>
+                </div>
+                <button type="submit" color="primary">Ajouter la société</button>
+                </form>
+
+            </div>
         </div>
-    </div>
-    </div>
+        </div>
 
-    <script>
-        let vm;
+        <script>
+            let vm;
 
-        window.addEventListener('load', () => {
-
-            vm = new Vue({ // eslint-disable-line no-undef
-                el: '#app',
-                data: {
-                    societes: [],
-                    error: ''
-                }
-            });
-
-            // API Call
-
-            loadSocietes();
-
-            // API POST Call
-            document.getElementById('form').addEventListener('submit', (event) => {
-                event.preventDefault();
-                const label = document.getElementById('label').value;
-                fetch('http://localhost:3000/societes', {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json'
+            window.addEventListener('load', () => {
+                vm = new Vue({ // eslint-disable-line no-undef
+                    el: '#app',
+                    data: {
+                        societes: [],
+                        error: '',
+                        societeToUpdate: {},
                     },
-                    body: JSON.stringify({ label: label }),
-                })
-                    .then(loadSocietes)
-                    .then(document.getElementById('form').reset());
+                });
+
+                // API GET Call
+
+                loadSocietes();
+
+                // API POST Call
+                document.getElementById('form').addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    const label = document.getElementById('label').value;
+                    fetch('http://localhost:3000/societes', {
+                        method: 'POST',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ label: label }),
+                    })
+                        .then(loadSocietes)
+                        .then(document.getElementById('form').reset());
+                });
+
+                // API UPDATE CALL
+
+                document.getElementById('form-update').addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    fetch('http://localhost:3000/societes/' + vm.societeToUpdate.id, {
+                        method: 'PUT',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(vm.societeToUpdate),
+                    })
+                        .then(loadSocietes);
+                });
             });
-        });
 
-        function loadSocietes() {
-            fetch('http://localhost:3000/societes')
-                // transmet le body de la réponse sur le then suivant
-                .catch(() => { vm.error = 'Une erreur inattendue est arrivée 😤'; })
-                .then(societesResponse => societesResponse.json())
-                .then(societes => (vm.societes = societes));
-        };
+            function loadSocietes() {
+                fetch('http://localhost:3000/societes')
+                    // transmet le body de la réponse sur le then suivant
+                    .catch(() => { vm.error = 'Une erreur inattendue est arrivée 😤'; })
+                    .then(societesResponse => societesResponse.json())
+                    .then(societes => (vm.societes = societes));
+            };
 
-        // API DELETE CALL
-        function deleteSociete(societe) { // eslint-disable-line no-unused-vars
-            fetch('http://localhost:3000/societes/' + societe.id, {
-                method: 'delete'
-            })
-                .then(loadSocietes);
-        }
-    </script>
+            // API DELETE CALL
+            function deleteSociete(societe) { // eslint-disable-line no-unused-vars
+                fetch('http://localhost:3000/societes/' + societe.id, {
+                    method: 'delete',
+                })
+                    .then(loadSocietes);
+            }
 
+            // DECLENCHEUR MODAL
+            function updateSociete(societe) { // eslint-disable-line no-unused-vars
+                vm.societeToUpdate = societe;
+                const modal = document.getElementById('modal-update');
+                modal.style.display = 'block';
+            }
+
+            // FERMETURE MODAL
+            function closeModal() { // eslint-disable-line no-unused-vars
+                const modal = document.getElementById('modal-update');
+                modal.style.display = 'none';
+            }
+
+            // FERMETURE MODAL SUCCESS
+            function closeModalSuccess() { // eslint-disable-line no-unused-vars
+                const modal = document.getElementById('modal-update');
+                modal.style.display = 'none';
+            }
+        </script>
+    </section>
 </body>
 
 </html>
