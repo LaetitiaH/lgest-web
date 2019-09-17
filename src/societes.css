@@ -5,3 +5,11 @@
 #loader {
     display: none;
 }
+
+#progressBar{
+    display: none;
+}
+
+#listeSocieties {
+    display: none;
+}

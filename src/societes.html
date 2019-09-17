@@ -73,26 +73,30 @@
                     <div>
                         <div class="card-content">
                             <div class="content">
-                                <p v-if="error">{{ error }}</p>
-                                <p v-else-if="societes.length === 0">Aucune société</p>
-                                <table class="table is-hoverable" id="societesTable" v-else>
-                                    <thead>
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Label</td>
-                                            <td></td>
-                                            <td></td>
+                                <div id="progressBar"><progress class="progress is-large is-info"
+                                        max="100"></progress></div>
+                                <div id="listeSocieties">
+                                    <p v-if="error">{{ error }}</p>
+                                    <p v-else-if="societes.length === 0">Aucune société</p>
+                                    <table class="table is-hoverable" id="societesTable" v-else>
+                                        <thead>
+                                            <tr>
+                                                <td>ID</td>
+                                                <td>Label</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </thead>
+                                        <tr v-for="societe in societes">
+                                            <td>{{ societe.id }}</td>
+                                            <td>{{ societe.label }}</td>
+                                            <td><a class="delete" v-on:click="deleteSociete(societe)"></a></td>
+                                            <td><span class="icon has-text-grey-light"
+                                                    v-on:click="updateSociete(societe)"><i
+                                                        class="fas fa-pencil-ruler"></i></span></td>
                                         </tr>
-                                    </thead>
-                                    <tr v-for="societe in societes">
-                                        <td>{{ societe.id }}</td>
-                                        <td>{{ societe.label }}</td>
-                                        <td><a class="delete" v-on:click="deleteSociete(societe)"></a></td>
-                                        <td><span class="icon has-text-grey-light"
-                                                v-on:click="updateSociete(societe)"><i
-                                                    class="fas fa-pencil-ruler"></i></span></td>
-                                    </tr>
-                                </table>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -155,6 +159,7 @@
         </div>
 
         <script>
+            displayGetLoader();
             let vm;
 
             window.addEventListener('load', () => {
@@ -165,13 +170,12 @@
                         error: '',
                         societeToUpdate: {},
                         societeToCreate: {},
-
                     },
                 });
 
                 // API GET Call
-
-                loadSocietes();
+                loadSocietes()
+                    .then(displaySocieties);
 
                 // API POST Call
                 document.getElementById('form-create').addEventListener('submit', (event) => {
@@ -187,6 +191,8 @@
                         body: JSON.stringify(vm.societeToCreate),
                     })
                         .then(loadSocietes)
+                        .then(displaySocieties)
+                        .then(displayAddButton)
                         .then(() => document.getElementById('form-create').reset());
                 });
 
@@ -207,12 +213,12 @@
             });
 
             function loadSocietes() {
+
                 return fetch('http://localhost:3000/societes')
                     // transmet le body de la réponse sur le then suivant
                     .catch(() => { vm.error = 'Une erreur inattendue est arrivée 😤'; })
                     .then(societesResponse => societesResponse.json())
-                    .then(societes => (vm.societes = societes))
-                    .then(displayAddButton);
+                    .then(societes => (vm.societes = societes));
             };
 
             // API DELETE CALL
@@ -242,7 +248,7 @@
                 modal.style.display = 'none';
             }
 
-            // Affichage loader
+            // Affichage add loader
             function displayLoader() { // eslint-disable-line no-unused-vars
                 const loader = document.getElementById('loader');
                 const buttonAdd = document.getElementById('buttonAdd');
@@ -256,6 +262,20 @@
                 const buttonAdd = document.getElementById('buttonAdd');
                 loader.style.display = 'none';
                 buttonAdd.style.display = 'block';
+            }
+
+            // Affichage get loader
+            function displayGetLoader() { // eslint-disable-line no-unused-vars
+                const progressBar = document.getElementById('progressBar');
+                progressBar.style.display = 'block';
+            }
+
+            // Affichage listesociété
+            function displaySocieties() { // eslint-disable-line no-unused-vars
+                const progressBar = document.getElementById('progressBar');
+                const listeSocieties = document.getElementById('listeSocieties');
+                progressBar.style.display = 'none';
+                listeSocieties.style.display = 'block';
             }
         </script>
     </section>
