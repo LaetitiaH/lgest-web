@@ -116,8 +116,8 @@
                                     <div>
                                         <label for="labelFormUpdate" class="label">Label</label>
                                         <div class="control">
-                                            <input type="text" id="labelFormUpdate" name="label" class="input" placeholder="Label"
-                                                v-model="societeToUpdate.label">
+                                            <input type="text" id="labelFormUpdate" name="label" class="input"
+                                                placeholder="Label" v-model="societeToUpdate.label">
                                         </div>
                                     </div>
                                 </div>
@@ -126,6 +126,7 @@
                         <footer class="modal-card-foot">
                             <button class="button is-success" type="submit" color="primary"
                                 v-on:click="closeModalSuccess">Mettre à jour</button>
+
                             <button class="button" v-on:click="closeModal">Annuler</button>
                         </footer>
                     </form>
@@ -145,7 +146,9 @@
                             </div>
                         </div>
                     </div>
-                    <button class="button is-success" type="submit" color="primary">Ajouter la société</button>
+                    <div id="buttonAdd"><button class="button is-success" type="submit" color="primary">Ajouter la
+                            société</button></div>
+                    <div id="loader"><a class="button is-success is-loading">Loading</a></div>
                 </form>
 
             </div>
@@ -162,6 +165,7 @@
                         error: '',
                         societeToUpdate: {},
                         societeToCreate: {},
+
                     },
                 });
 
@@ -172,6 +176,8 @@
                 // API POST Call
                 document.getElementById('form-create').addEventListener('submit', (event) => {
                     event.preventDefault();
+                    // change button
+                    displayLoader();
                     fetch('http://localhost:3000/societes', {
                         method: 'POST',
                         headers: {
@@ -195,6 +201,7 @@
                         },
                         body: JSON.stringify(vm.societeToUpdate),
                     })
+                        // affichage page
                         .then(loadSocietes);
                 });
             });
@@ -204,7 +211,8 @@
                     // transmet le body de la réponse sur le then suivant
                     .catch(() => { vm.error = 'Une erreur inattendue est arrivée 😤'; })
                     .then(societesResponse => societesResponse.json())
-                    .then(societes => (vm.societes = societes));
+                    .then(societes => (vm.societes = societes))
+                    .then(displayAddButton);
             };
 
             // API DELETE CALL
@@ -232,6 +240,22 @@
             function closeModalSuccess() { // eslint-disable-line no-unused-vars
                 const modal = document.getElementById('modal-update');
                 modal.style.display = 'none';
+            }
+
+            // Affichage loader
+            function displayLoader() { // eslint-disable-line no-unused-vars
+                const loader = document.getElementById('loader');
+                const buttonAdd = document.getElementById('buttonAdd');
+                loader.style.display = 'block';
+                buttonAdd.style.display = 'none';
+            }
+
+            // Affichage addButton
+            function displayAddButton() { // eslint-disable-line no-unused-vars
+                const loader = document.getElementById('loader');
+                const buttonAdd = document.getElementById('buttonAdd');
+                loader.style.display = 'none';
+                buttonAdd.style.display = 'block';
             }
         </script>
     </section>

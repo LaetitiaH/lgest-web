@@ -1,3 +1,7 @@
 #logo {
     width: 112px;
 }
+
+#loader {
+    display: none;
+}
