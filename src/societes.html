@@ -138,7 +138,7 @@
             </div>
 
             <!-- Formulaire Ajout société -->
-            <div class="column">
+            <div id="addSocietyBlock" class="column">
                 <form id="form-create">
                     <div class="field">
                         <div>
@@ -175,7 +175,8 @@
 
                 // API GET Call
                 loadSocietes()
-                    .then(displaySocieties);
+                    .then(displaySocieties)
+                    .then(displayAddSociety);
 
                 // API POST Call
                 document.getElementById('form-create').addEventListener('submit', (event) => {
@@ -288,6 +289,10 @@
             function enableInput() { // eslint-disable-line no-unused-vars
                 const input = document.getElementById('societeToCreateInput');
                 input.enable = true;
+            }
+            function displayAddSociety() { // eslint-disable-line no-unused-vars
+                const addSocietyBlock = document.getElementById('addSocietyBlock');
+                addSocietyBlock.style.display = 'block';
             }
         </script>
     </section>
