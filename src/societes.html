@@ -73,8 +73,8 @@
                     <div>
                         <div class="card-content">
                             <div class="content">
-                                <div id="progressBar"><progress class="progress is-large is-info"
-                                        max="100"></progress></div>
+                                <div id="progressBar"><progress class="progress is-large is-info" max="100"></progress>
+                                </div>
                                 <div id="listeSocieties">
                                     <p v-if="error">{{ error }}</p>
                                     <p v-else-if="societes.length === 0">Aucune société</p>
@@ -142,17 +142,17 @@
                 <form id="form-create">
                     <div class="field">
                         <div>
-                            <label for="labelForm" class="label">Label</label>
-
-                            <div class="control">
-                                <input type="text" id="labelForm" name="label" class="input" placeholder="Label"
-                                    v-model="societeToCreate.label">
+                            <label for="societeToCreateInput" class="label">Ajouter une société</label>
+                            <div id="input" class="control">
+                                <input type="text" id="societeToCreateInput" name="label" class="input"
+                                    placeholder="Nom de la société" v-model="societeToCreate.label">
                             </div>
                         </div>
                     </div>
                     <div id="buttonAdd"><button class="button is-success" type="submit" color="primary">Ajouter la
                             société</button></div>
                     <div id="loader"><a class="button is-success is-loading">Loading</a></div>
+
                 </form>
 
             </div>
@@ -182,6 +182,7 @@
                     event.preventDefault();
                     // change button
                     displayLoader();
+                    disableInput();
                     fetch('http://localhost:3000/societes', {
                         method: 'POST',
                         headers: {
@@ -193,6 +194,7 @@
                         .then(loadSocietes)
                         .then(displaySocieties)
                         .then(displayAddButton)
+                        .then(enableInput)
                         .then(() => document.getElementById('form-create').reset());
                 });
 
@@ -276,6 +278,16 @@
                 const listeSocieties = document.getElementById('listeSocieties');
                 progressBar.style.display = 'none';
                 listeSocieties.style.display = 'block';
+            }
+
+            // Affichage disabled input
+            function disableInput() { // eslint-disable-line no-unused-vars
+                const input = document.getElementById('societeToCreateInput');
+                input.enable = false;
+            }
+            function enableInput() { // eslint-disable-line no-unused-vars
+                const input = document.getElementById('societeToCreateInput');
+                input.enable = true;
             }
         </script>
     </section>
