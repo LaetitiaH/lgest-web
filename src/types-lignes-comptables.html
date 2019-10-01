@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="../node_modules/vue/dist/vue.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link rel="stylesheet" href="../node_modules/bulma/css/bulma.min.css">
+    <link rel="stylesheet" href="societes.css">
+
+    <title>Liste des sociétés</title>
+</head>
+
+<body>
+
+    <section id="app">
+
+        <!-- Nav-bar -->
+        <nav class="navbar is-info" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item">
+                    <img src="../images/logo_small.png" id="logo" alt="L-SOCIETY">
+                </a>
+
+                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+                    data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item">
+                        Home
+                    </a>
+
+                    <a class="navbar-item" href="societes.html">Sociétés
+                    </a>
+                    <a class="navbar-item">
+                        Types lignes comptables
+                    </a>
+                </div>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-light">
+                            Log in
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+
+        <!-- Fin Nav-bar -->
+
+        <!-- Search -->
+
+
+
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title is-centered">
+                    Rechercher un type de ligne comptable
+                </p>
+            </header>
+
+            <div>
+                <div class="card-content">
+                    <div class="content">
+                        <form class="field is-grouped" id="search-form">
+                            <p class="control is-expanded" >
+                                <input class="input" type="text" placeholder="Rechercher" name="label"
+                                    v-model="lignesToSearch.label">
+                            </p>
+                            <p class="control">
+                                <button class="button is-success" type="submit">
+                                    Rechercher
+                                </button>
+                            </p>
+                            <p v-if="error">{{ error }}</p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <script>
+            let vm;
+
+            window.addEventListener('load', () => {
+                vm = new Vue({ // eslint-disable-line no-undef
+                    el: '#app',
+                    data: {
+                        lignesTypesComptables: [],
+                        lignesToSearch: [],
+                        error: '',
+                    },
+                });
+
+                //API GET one ligne comptable
+
+                document.getElementById('search-form').addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    fetch('http://localhost:3000/types-lignes-comptables?label=' + vm.lignesToSearch.label)
+                        // transmet le body de la réponse sur le then suivant
+                        .catch(() => { vm.error = 'Une erreur inattendue est arrivée 😤'; })
+                        .then(lignesResponse => lignesResponse.json())
+                        .then(lignesTypesComptables => (vm.lignesTypesComptables = lignesTypesComptables));
+                });
+            });
+        </script>
+    </section>
+</body>
+
+</html>
