@@ -90,7 +90,7 @@
                                         <tr v-for="societe in societes">
                                             <td>{{ societe.id }}</td>
                                             <td>{{ societe.label }}</td>
-                                            <td><a class="delete" v-on:click="deleteSociete(societe)"></a></td>
+                                            <td><a class="delete" v-on:click="deleteModalSociete(societe)"></a></td>
                                             <td><span class="icon has-text-grey-light"
                                                     v-on:click="updateSociete(societe)"><i
                                                         class="fas fa-pencil-ruler"></i></span></td>
@@ -102,6 +102,28 @@
                     </div>
                 </div>
             </div>
+
+
+            <!-- Modal deleteSociety -->
+
+            <div class="modal" id="modal-delete">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">Confirmer la suppression de la société</p>
+                        <button class="delete" aria-label="close" v-on:click="closeModalDelete"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        Cette action est irrémediable !!!
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button id="buttonDelete" class="button is-success" v-model="societeToDelete.id">Supprimer la
+                            société</button>
+                        <button class="button" v-on:click="closeModalDelete">Annuler</button>
+                    </footer>
+                </div>
+            </div>
+
 
             <!-- Modal updatesociete -->
 
@@ -170,6 +192,7 @@
                         error: '',
                         societeToUpdate: {},
                         societeToCreate: {},
+                        societeToDelete: {},
                     },
                 });
 
@@ -213,6 +236,17 @@
                         // affichage page
                         .then(loadSocietes);
                 });
+
+                // API DELETE CALL
+                document.getElementById('buttonDelete').addEventListener('click', (event) => {
+                    event.preventDefault();
+                    fetch('http://localhost:3000/societes/' + vm.societeToDelete.id, {
+                        method: 'delete',
+                    })
+                        .then(closeModalDelete)
+                        .then(loadSocietes)
+                        .then(() => document.getElementById('form-create').reset());
+                });
             });
 
             function loadSocietes() {
@@ -239,15 +273,30 @@
                 modal.style.display = 'block';
             }
 
-            // FERMETURE MODAL
+            // FERMETURE MODAL UPDATE
             function closeModal() { // eslint-disable-line no-unused-vars
                 const modal = document.getElementById('modal-update');
                 modal.style.display = 'none';
             }
 
-            // FERMETURE MODAL SUCCESS
+            // FERMETURE MODAL SUCCESS UPDATE
             function closeModalSuccess() { // eslint-disable-line no-unused-vars
                 const modal = document.getElementById('modal-update');
+                modal.style.display = 'none';
+            }
+
+            // DECLENCHEUR MODAL DELETE
+            function deleteModalSociete(societe) { // eslint-disable-line no-unused-vars
+                document.getElementById('form-create').reset();
+                vm.societeToDelete = societe;
+                const modal = document.getElementById('modal-delete');
+                modal.style.display = 'block';
+            }
+
+            // FERMETURE MODAL UPDATE
+            function closeModalDelete() { // eslint-disable-line no-unused-vars
+                document.getElementById('form-create').reset();
+                const modal = document.getElementById('modal-delete');
                 modal.style.display = 'none';
             }
 
