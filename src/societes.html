@@ -196,7 +196,7 @@
                         .then(displaySocieties)
                         .then(displayAddButton)
                         .then(enableInput)
-                        .then(() => document.getElementById('form-create').reset());
+                        .then(() => { vm.societeToCreate = {}; });
                 });
 
                 // API UPDATE CALL
